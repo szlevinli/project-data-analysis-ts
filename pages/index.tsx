@@ -1,16 +1,11 @@
+import { read_csv } from 'danfojs';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from '../styles/Home.module.css';
-import { read_csv } from 'danfojs';
-import Table from '../components/Table';
 import { useState } from 'react';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-
-const Input = styled('input')({
-  display: 'none',
-});
+import ChooseFile from '../components/ChooseFile';
+import Table from '../components/Table';
+import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
   const [columns, setColumns] = useState<Array<string>>([]);
@@ -40,17 +35,10 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <div>
-          <label htmlFor="contained-button-file">
-            <Input
-              accept=".csv"
-              id="contained-button-file"
-              type="file"
-              onChange={handleInputFileChange}
-            />
-            <Button variant="contained" component="span">
-              Upload
-            </Button>
-          </label>
+          <ChooseFile
+            id="ChooseFile-vacancy"
+            handleInputFileChange={handleInputFileChange}
+          />
         </div>
         <Table columns={columns} data={data} />
       </main>
