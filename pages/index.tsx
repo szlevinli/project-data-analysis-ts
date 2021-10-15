@@ -1,11 +1,17 @@
-import { read_csv } from 'danfojs';
+import { DataFrame, read_csv } from 'danfojs';
+import { either, taskEither } from 'fp-ts';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useState } from 'react';
 import ChooseFile from '../components/ChooseFile';
 import Table from '../components/Table';
 import styles from '../styles/Home.module.css';
+
+const readCsv = (url: string): taskEither.TaskEither<Error, DataFrame> =>
+  taskEither.tryCatch(
+    () => read_csv(url, {}),
+    (err) => new Error(String(err))
+  );
 
 const Home: NextPage = () => {
   const [columns, setColumns] = useState<Array<string>>([]);
@@ -16,13 +22,17 @@ const Home: NextPage = () => {
   ) => {
     const file = e.target.files?.[0];
     const url = URL.createObjectURL(file);
-    read_csv(url, {}).then((df) => {
-      const columns_ = df.columns;
-      setColumns(columns_);
-      const data_ = df.values as Array<Array<string>>;
-      setData(data_);
-    });
-    console.log(`choose a file, the file name is ${file?.name}`);
+    readCsv(url)().then(
+      either.fold(
+        // TODO: 读取文件失败, 打印错误到控制台. 未来需要修改该方法在界面提醒用户操作失败
+        console.error,
+        // 读取文件成功
+        (df) => {
+          setColumns(df.columns);
+          setData(df.values as Array<Array<string>>);
+        }
+      )
+    );
   };
 
   return (
@@ -42,19 +52,6 @@ const Home: NextPage = () => {
         </div>
         <Table columns={columns} data={data} />
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
   );
 };
