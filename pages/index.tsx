@@ -1,9 +1,35 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
+import { read_csv } from 'danfojs';
+import Table from '../components/Table';
+import { useState } from 'react';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+
+const Input = styled('input')({
+  display: 'none',
+});
 
 const Home: NextPage = () => {
+  const [columns, setColumns] = useState<Array<string>>([]);
+  const [data, setData] = useState<Array<Array<string>>>([[]]);
+
+  const handleInputFileChange: React.ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    const file = e.target.files?.[0];
+    const url = URL.createObjectURL(file);
+    read_csv(url, {}).then((df) => {
+      const columns_ = df.columns;
+      setColumns(columns_);
+      const data_ = df.values as Array<Array<string>>;
+      setData(data_);
+    });
+    console.log(`choose a file, the file name is ${file?.name}`);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,44 +39,20 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div>
+          <label htmlFor="contained-button-file">
+            <Input
+              accept=".csv"
+              id="contained-button-file"
+              type="file"
+              onChange={handleInputFileChange}
+            />
+            <Button variant="contained" component="span">
+              Upload
+            </Button>
+          </label>
         </div>
+        <Table columns={columns} data={data} />
       </main>
 
       <footer className={styles.footer}>
@@ -66,7 +68,7 @@ const Home: NextPage = () => {
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
