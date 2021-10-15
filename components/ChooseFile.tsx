@@ -24,7 +24,7 @@ const ChooseFile: FC<Props> = (props) => (
         onChange={props.handleInputFileChange}
       />
       <Button variant="contained" component="span">
-        Upload
+        选择文件
       </Button>
     </label>
   </Stack>
