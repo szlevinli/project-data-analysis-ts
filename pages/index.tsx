@@ -24,7 +24,7 @@ const Home: NextPage = () => {
     const file = e.target.files?.[0];
     const url = URL.createObjectURL(file);
     createDfFromUrl(url)().then(
-      eitherFold(
+      eitherFold<Error, DataFrame, void>(
         // TODO: 读取文件失败, 打印错误到控制台. 未来需要修改该方法在界面提醒用户操作失败
         console.error,
         // 读取文件成功
