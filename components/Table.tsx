@@ -8,7 +8,8 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-interface Column {
+// TODO: 需要应用该接口
+export interface Column {
   id: string;
   label: string;
   minWidth?: number;
@@ -36,12 +37,15 @@ const Table: FC<Props> = (props) => {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 500 }}>
+      <TableContainer sx={{ maxHeight: 500, maxWidth: 'lg' }}>
         <MuiTable stickyHeader>
           <TableHead>
             <TableRow>
               {props.columns.map((column) => (
-                <TableCell key={column}>{column}</TableCell>
+                // TODO:  minWidth 需要参数化
+                <TableCell key={column} style={{ minWidth: 100 }}>
+                  {column}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
