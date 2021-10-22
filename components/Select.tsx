@@ -33,7 +33,6 @@ const Select: FC<Props> = ({ optionNames, handleChange, labelId }) => {
   useEffect(() => {
     setSelected(optionNames.map((_, idx) => idx));
   }, [optionNames]);
-
   const handleChange_ = (e: SelectChangeEvent<Array<number>>) => {
     const v = e.target.value;
     console.log(v);
@@ -41,7 +40,7 @@ const Select: FC<Props> = ({ optionNames, handleChange, labelId }) => {
   };
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      <FormControl sx={{ m: 2, width: 300 }}>
         <InputLabel id={labelId}>字段</InputLabel>
         <MuiSelect
           labelId={labelId}
@@ -52,6 +51,9 @@ const Select: FC<Props> = ({ optionNames, handleChange, labelId }) => {
           input={<OutlinedInput label="fields" />}
           renderValue={(v) => `已选择 ${v.length} 个字段`}
           MenuProps={MenuProps}
+          sx={{
+            height: '2em',
+          }}
         >
           {optionNames.map((optionName, idx) => (
             <MenuItem key={idx} value={idx}>

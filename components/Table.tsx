@@ -7,6 +7,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { Calculate } from '@mui/icons-material';
 
 // TODO: 需要应用该接口
 export interface Column {
@@ -36,8 +37,13 @@ const Table: FC<Props> = (props) => {
   };
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 500, maxWidth: 'lg' }}>
+    <Paper
+      sx={{
+        width: 1,
+        overflow: 'hidden',
+      }}
+    >
+      <TableContainer sx={{ maxHeight: 'calc(80vh - 200px)' }}>
         <MuiTable stickyHeader>
           <TableHead>
             <TableRow>

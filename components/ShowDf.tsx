@@ -3,6 +3,7 @@ import { fold, Option } from 'fp-ts/Option';
 import React, { FC } from 'react';
 import Table from './Table';
 import Select from './Select';
+import Box from '@mui/material/Box';
 
 export type Props = {
   df: Option<DataFrame>;
@@ -15,14 +16,14 @@ const ShowDf: FC<Props> = ({ df }) => {
   )(df);
 
   return (
-    <div>
+    <Box>
       <Select
         labelId="ShowDf-Select-Label"
         optionNames={columns}
         handleChange={() => console.log(`ShowDf Component handleChange.`)}
       />
       <Table columns={columns} data={data} />
-    </div>
+    </Box>
   );
 };
 
