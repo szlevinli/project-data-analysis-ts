@@ -43,7 +43,7 @@ const Table: FC<Props> = (props) => {
         overflow: 'hidden',
       }}
     >
-      <TableContainer sx={{ maxHeight: 'calc(80vh - 200px)' }}>
+      <TableContainer sx={{ maxHeight: 'calc(80vh - 10rem)' }}>
         <MuiTable stickyHeader>
           <TableHead>
             <TableRow>
