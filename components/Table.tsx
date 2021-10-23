@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Calculate } from '@mui/icons-material';
+import Typography from '@mui/material/Typography';
 
 // TODO: 需要应用该接口
 export interface Column {
@@ -61,7 +62,11 @@ const Table: FC<Props> = (props) => {
               .map((row, i) => (
                 <TableRow hover tabIndex={-1} key={i}>
                   {row.map((d, j) => (
-                    <TableCell key={j}>{d}</TableCell>
+                    <TableCell key={j}>
+                      <Typography noWrap sx={{ width: 100 }}>
+                        {d}
+                      </Typography>
+                    </TableCell>
                   ))}
                 </TableRow>
               ))}
