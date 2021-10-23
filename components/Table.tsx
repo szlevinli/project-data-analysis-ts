@@ -1,14 +1,14 @@
-import React, { FC, useState, ChangeEvent } from 'react';
 import Paper from '@mui/material/Paper';
-import TableContainer from '@mui/material/TableContainer';
 import MuiTable from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Calculate } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
+import React, { ChangeEvent, FC, useState } from 'react';
+import OverflowTip from './OverflowTip';
 
 // TODO: 需要应用该接口
 export interface Column {
@@ -63,9 +63,7 @@ const Table: FC<Props> = (props) => {
                 <TableRow hover tabIndex={-1} key={i}>
                   {row.map((d, j) => (
                     <TableCell key={j}>
-                      <Typography noWrap sx={{ width: 100 }}>
-                        {d}
-                      </Typography>
+                      <OverflowTip value={d} width={100} />
                     </TableCell>
                   ))}
                 </TableRow>
