@@ -1,30 +1,27 @@
 import Paper from '@mui/material/Paper';
 import MuiTable from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
+import TableCell, { TableCellProps } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import React, { ChangeEvent, FC, useState } from 'react';
 import OverflowTip from './OverflowTip';
 
-// TODO: 需要应用该接口
 export interface Column {
-  id: string;
   label: string;
   minWidth?: number;
-  align?: 'right';
+  align?: TableCellProps['align'];
   format?: (value: number) => string;
 }
 
-interface Props {
-  columns: Array<string>;
+export interface TableProps {
+  columns: Array<Column>;
   data: Array<Array<string>>;
 }
 
-const Table: FC<Props> = (props) => {
+const Table: FC<TableProps> = ({ columns, data }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -48,22 +45,30 @@ const Table: FC<Props> = (props) => {
         <MuiTable stickyHeader>
           <TableHead>
             <TableRow>
-              {props.columns.map((column) => (
-                // TODO:  minWidth 需要参数化
-                <TableCell key={column} style={{ minWidth: 100 }}>
-                  {column}
-                </TableCell>
-              ))}
+              {columns.map(
+                ({ label, minWidth = 100, align = 'right' }, idx) => (
+                  <TableCell key={idx} style={{ minWidth }} align={align}>
+                    {label}
+                  </TableCell>
+                )
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.data
+            {data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, i) => (
                 <TableRow hover tabIndex={-1} key={i}>
-                  {row.map((d, j) => (
-                    <TableCell key={j}>
-                      <OverflowTip value={d} width={100} />
+                  {columns.map(({ align, format, minWidth = 100 }, idx) => (
+                    <TableCell key={idx} align={align}>
+                      <OverflowTip
+                        value={
+                          format && !isNaN(Number(row[idx]))
+                            ? format(+row[idx])
+                            : row[idx]
+                        }
+                        width={minWidth}
+                      />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -71,15 +76,17 @@ const Table: FC<Props> = (props) => {
           </TableBody>
         </MuiTable>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={props.data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {data.length > 0 && (
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      )}
     </Paper>
   );
 };

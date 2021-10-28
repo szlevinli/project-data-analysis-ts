@@ -1,14 +1,12 @@
 import Box from '@mui/material/Box';
 import { DataFrame, read_csv } from 'danfojs';
-import { fold as eitherFold } from 'fp-ts/Either';
-import { none, Option, some } from 'fp-ts/Option';
+import { pipe } from 'fp-ts/function';
+import { fromNullable, map as optionMap, none, Option } from 'fp-ts/Option';
 import { TaskEither, tryCatch } from 'fp-ts/TaskEither';
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import React, { useState } from 'react';
 import ChooseFile from '../components/ChooseFile';
-import ShowDf from '../components/ShowDf';
-import styles from '../styles/Home.module.css';
+import ShowDf from '../containers/ShowDf';
 
 const createDfFromUrl = (url: string): TaskEither<Error, DataFrame> =>
   tryCatch(
@@ -17,24 +15,18 @@ const createDfFromUrl = (url: string): TaskEither<Error, DataFrame> =>
   );
 
 const Home: NextPage = () => {
-  const [df, setDf] = useState<Option<DataFrame>>(none);
+  const [df, setDf] = useState<Option<TaskEither<Error, DataFrame>>>(none);
 
   const handleInputFileChange: React.ChangeEventHandler<HTMLInputElement> = (
     e
-  ) => {
-    const file = e.target.files?.[0];
-    const url = URL.createObjectURL(file);
-    createDfFromUrl(url)().then(
-      eitherFold<Error, DataFrame, void>(
-        // TODO: 读取文件失败, 打印错误到控制台. 未来需要修改该方法在界面提醒用户操作失败
-        console.error,
-        // 读取文件成功
-        (df) => {
-          setDf(some(df));
-        }
-      )
+  ) =>
+    pipe(
+      e.target.files?.[0],
+      fromNullable,
+      optionMap(URL.createObjectURL),
+      optionMap(createDfFromUrl),
+      setDf
     );
-  };
 
   return (
     <Box>
@@ -42,7 +34,7 @@ const Home: NextPage = () => {
         id="ChooseFile-vacancy"
         handleInputFileChange={handleInputFileChange}
       />
-      <ShowDf df={df} />
+      <ShowDf df={df} idSuffix="vacancy" />
     </Box>
   );
 };

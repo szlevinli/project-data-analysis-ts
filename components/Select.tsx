@@ -1,6 +1,3 @@
-import React, { FC, useEffect, useState } from 'react';
-import MuiSelect, { SelectChangeEvent } from '@mui/material/Select';
-import { times, identity, contains } from 'ramda';
 import {
   Checkbox,
   FormControl,
@@ -9,6 +6,9 @@ import {
   MenuItem,
   OutlinedInput,
 } from '@mui/material';
+import MuiSelect, { SelectChangeEvent } from '@mui/material/Select';
+import { contains } from 'ramda';
+import React, { FC, useEffect, useState } from 'react';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -51,9 +51,6 @@ const Select: FC<Props> = ({ optionNames, handleChange, labelId }) => {
           input={<OutlinedInput label="fields" />}
           renderValue={(v) => `已选择 ${v.length} 个字段`}
           MenuProps={MenuProps}
-          sx={{
-            height: '2em',
-          }}
         >
           {optionNames.map((optionName, idx) => (
             <MenuItem key={idx} value={idx}>
