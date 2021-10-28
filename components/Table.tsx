@@ -10,6 +10,7 @@ import React, { ChangeEvent, FC, useState } from 'react';
 import OverflowTip from './OverflowTip';
 
 export interface Column {
+  id: number;
   label: string;
   minWidth?: number;
   align?: TableCellProps['align'];
@@ -25,7 +26,7 @@ const Table: FC<TableProps> = ({ columns, data }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const handleChangePage = (e: unknown, newPage: number) => {
+  const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
 
@@ -45,13 +46,11 @@ const Table: FC<TableProps> = ({ columns, data }) => {
         <MuiTable stickyHeader>
           <TableHead>
             <TableRow>
-              {columns.map(
-                ({ label, minWidth = 100, align = 'right' }, idx) => (
-                  <TableCell key={idx} style={{ minWidth }} align={align}>
-                    {label}
-                  </TableCell>
-                )
-              )}
+              {columns.map(({ id, label, minWidth = 100, align = 'right' }) => (
+                <TableCell key={id} style={{ minWidth }} align={align}>
+                  {label}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
