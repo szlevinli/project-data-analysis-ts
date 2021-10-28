@@ -7,8 +7,7 @@ import {
   OutlinedInput,
 } from '@mui/material';
 import MuiSelect, { SelectChangeEvent } from '@mui/material/Select';
-import { contains } from 'ramda';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -21,41 +20,42 @@ const MenuProps = {
   },
 };
 
-export type Props = {
+export type Option = {
+  label: string;
+  id: number;
+};
+
+export type SelectProps = {
   labelId: string;
-  optionNames: Array<string>;
+  options: Array<Option>;
+  selectedOptionIds: Array<number>;
   handleChange: (e: SelectChangeEvent<Array<number>>) => void;
 };
 
-const Select: FC<Props> = ({ optionNames, handleChange, labelId }) => {
-  const [selected, setSelected] = useState<Array<number>>([]);
-
-  useEffect(() => {
-    setSelected(optionNames.map((_, idx) => idx));
-  }, [optionNames]);
-  const handleChange_ = (e: SelectChangeEvent<Array<number>>) => {
-    const v = e.target.value;
-    console.log(v);
-    setSelected(typeof v === 'string' ? selected : v);
-  };
+const Select: FC<SelectProps> = ({
+  options,
+  selectedOptionIds,
+  handleChange,
+  labelId,
+}) => {
   return (
     <div>
       <FormControl sx={{ m: 2, width: 300 }}>
         <InputLabel id={labelId}>字段</InputLabel>
         <MuiSelect
           labelId={labelId}
-          id="project-data-analysis-multiple-checkbox"
+          id={`multiple-checkbox-${labelId}`}
           multiple
-          value={selected}
-          onChange={handleChange_}
+          value={selectedOptionIds}
+          onChange={handleChange}
           input={<OutlinedInput label="fields" />}
           renderValue={(v) => `已选择 ${v.length} 个字段`}
           MenuProps={MenuProps}
         >
-          {optionNames.map((optionName, idx) => (
-            <MenuItem key={idx} value={idx}>
-              <Checkbox checked={contains(idx, selected)} />
-              <ListItemText primary={optionName} />
+          {options.map((option) => (
+            <MenuItem key={option.id} value={option.id}>
+              <Checkbox checked={selectedOptionIds.includes(option.id)} />
+              <ListItemText primary={option.label} />
             </MenuItem>
           ))}
         </MuiSelect>
