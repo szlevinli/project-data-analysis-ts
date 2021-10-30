@@ -18,9 +18,19 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
+        {/*
+         * -----
+         * HEAD
+         * -----
+         */}
         <Grid item xs={12} minHeight="10vh">
           <Item>Head</Item>
         </Grid>
+        {/*
+         * -----
+         * SIDEBAR
+         * -----
+         */}
         <Grid
           item
           md={2}
@@ -37,6 +47,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           <Item>Sidebar</Item>
           <Item>Sidebar</Item>
         </Grid>
+        {/*
+         * -----
+         * MAIN
+         * -----
+         */}
         <Grid item xs={12} md={10} minHeight="80vh">
           {children}
         </Grid>
