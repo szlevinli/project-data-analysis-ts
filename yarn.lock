@@ -1035,6 +1035,17 @@
     lodash "^4.17.15"
     redent "^3.0.0"
 
+"@testing-library/react-hooks@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.nlark.com/@testing-library/react-hooks/download/@testing-library/react-hooks-7.0.2.tgz#3388d07f562d91e7f2431a4a21b5186062ecfee0"
+  integrity sha1-M4jQf1YtkefyQxpKIbUYYGLs/uA=
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@types/react" ">=16.9.0"
+    "@types/react-dom" ">=16.9.0"
+    "@types/react-test-renderer" ">=16.9.0"
+    react-error-boundary "^3.1.0"
+
 "@testing-library/react@^12.1.2":
   version "12.1.2"
   resolved "https://registry.npmmirror.com/@testing-library/react/download/@testing-library/react-12.1.2.tgz#f1bc9a45943461fa2a598bb4597df1ae044cfc76"
@@ -1194,10 +1205,24 @@
   version "0.25.0"
   resolved "https://codeload.github.com/types/npm-ramda/tar.gz/9529aa3c8ff70ff84afcbc0be83443c00f30ea90"
 
+"@types/react-dom@>=16.9.0":
+  version "17.0.11"
+  resolved "https://registry.npmmirror.com/@types/react-dom/download/@types/react-dom-17.0.11.tgz?cache=0&sync_timestamp=1635922942583&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Freact-dom%2Fdownload%2F%40types%2Freact-dom-17.0.11.tgz#e1eadc3c5e86bdb5f7684e00274ae228e7bcc466"
+  integrity sha1-4ercPF6GvbX3aE4AJ0riKOe8xGY=
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-is@^16.7.1 || ^17.0.0":
   version "17.0.2"
   resolved "https://registry.nlark.com/@types/react-is/download/@types/react-is-17.0.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Freact-is%2Fdownload%2F%40types%2Freact-is-17.0.2.tgz#abc4d910bff5b0bc6b3e1bec57575f6b63fd4e05"
   integrity sha1-q8TZEL/1sLxrPhvsV1dfa2P9TgU=
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-test-renderer@>=16.9.0":
+  version "17.0.1"
+  resolved "https://registry.nlark.com/@types/react-test-renderer/download/@types/react-test-renderer-17.0.1.tgz#3120f7d1c157fba9df0118dae20cb0297ee0e06b"
+  integrity sha1-MSD30cFX+6nfARja4gywKX7g4Gs=
   dependencies:
     "@types/react" "*"
 
@@ -1221,6 +1246,15 @@
   version "17.0.27"
   resolved "https://registry.npmmirror.com/@types/react/download/@types/react-17.0.27.tgz?cache=0&sync_timestamp=1634220794290&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Freact%2Fdownload%2F%40types%2Freact-17.0.27.tgz#6498ed9b3ad117e818deb5525fa1946c09f2e0e6"
   integrity sha1-ZJjtmzrRF+gY3rVSX6GUbAny4OY=
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@>=16.9.0":
+  version "17.0.34"
+  resolved "https://registry.npmmirror.com/@types/react/download/@types/react-17.0.34.tgz#797b66d359b692e3f19991b6b07e4b0c706c0102"
+  integrity sha1-eXtm01m2kuPxmZG2sH5LDHBsAQI=
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -5044,6 +5078,13 @@ react-dom@17.0.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.2"
+
+react-error-boundary@^3.1.0:
+  version "3.1.4"
+  resolved "https://registry.npmmirror.com/react-error-boundary/download/react-error-boundary-3.1.4.tgz#255db92b23197108757a888b01e5b729919abde0"
+  integrity sha1-JV25KyMZcQh1eoiLAeW3KZGaveA=
+  dependencies:
+    "@babel/runtime" "^7.12.5"
 
 react-is@17.0.2, react-is@^17.0.1, react-is@^17.0.2:
   version "17.0.2"
