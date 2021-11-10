@@ -34,7 +34,8 @@ export const useDf = (url: Option<string>) => {
 export const useDfFromEvent = (
   event: Option<ChangeEvent<HTMLInputElement>>
 ) => {
-  const [df, setDf] = useState<Option<Either<Error, DataFrame>>>(none);
+  const [url, setUrl] = useState<Option<string>>(none);
+  const df = useDf(url);
 
   useEffect(() => {
     pipe(
@@ -46,8 +47,7 @@ export const useDfFromEvent = (
             e.target.files?.[0],
             fromNullable,
             optionMap(URL.createObjectURL),
-            useDf,
-            setDf
+            setUrl
           )
       )
     );
