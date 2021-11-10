@@ -1,15 +1,17 @@
 import Box from '@mui/material/Box';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { DataFrame } from 'danfojs';
-import { fold as eitherFold } from 'fp-ts/Either';
-import { pipe } from 'fp-ts/function';
-import { fold as optionFold, none, Option, some } from 'fp-ts/Option';
-import { TaskEither } from 'fp-ts/TaskEither';
+import { constVoid, pipe } from 'fp-ts/function';
+import { fold as optionFold, Option } from 'fp-ts/Option';
+import { range } from 'ramda';
 import React, { FC, useEffect, useState } from 'react';
 import Select, { Option as SelectOption } from '../components/Select';
-import Table, { Column, TableProps } from '../components/Table';
+import Table, { Column as TableColumn, TableProps } from '../components/Table';
 
-const columnToColumn = (column: string, idx: number): Column => ({
+export const createTableColumn = (
+  column: string,
+  idx: number
+): TableColumn => ({
   id: idx,
   label: column,
   minWidth: 100,
@@ -17,96 +19,88 @@ const columnToColumn = (column: string, idx: number): Column => ({
   format: (v) => v.toLocaleString(),
 });
 
-const columnToOption = (column: string, idx: number): SelectOption => ({
-  label: column,
+export const createSelectOption = (
+  column: string,
+  idx: number
+): SelectOption => ({
   id: idx,
+  label: column,
 });
 
 export type ShowDfProps = {
-  df: Option<TaskEither<Error, DataFrame>>;
+  df: Option<DataFrame>;
   idSuffix: string;
 };
 
 const ShowDf: FC<ShowDfProps> = ({ df, idSuffix }) => {
   // For Table component
-  const [columns, setColumns] = useState<Array<Column>>([]);
-  const [data, setData] = useState<TableProps['data']>([]);
+  const [tableColumns, setTableColumns] = useState<Array<TableColumn>>([]);
+  const [tableData, setTableDat] = useState<TableProps['data']>([]);
+
   // For Select component
-  const [options, setOptions] = useState<Array<SelectOption>>([]);
+  const [selectOptions, setSelectOptions] = useState<Array<SelectOption>>([]);
   const [selectedOptionIds, setSelectedOptionIds] = useState<Array<number>>([]);
+
   // Inner DataFrame
-  const [innerDf, setInnerDf] = useState<Option<DataFrame>>(none);
+  // const [subDF, setSubDF] = useState<Option<DataFrame>>(none);
+
+  useEffect(() => {
+    const onNoneNothingToDo = constVoid;
+    const onRightSetDf = (df: DataFrame) => {
+      // setSubDF(some(df));
+      changeColumnsAndData(df);
+      setSelectOptions(df.columns.map(createSelectOption));
+      setSelectedOptionIds(range(0, df.columns.length));
+    };
+    pipe(
+      df,
+      optionFold(
+        // Options: onNone
+        onNoneNothingToDo,
+        // Options: onSome
+        onRightSetDf
+      )
+    );
+  }, [df]);
+
   // 从 DataFrame 提取 columns 和 data
   const changeColumnsAndData = (df: DataFrame) => {
-    setColumns(df.columns.map(columnToColumn));
-    setData(df.values as TableProps['data']);
+    setTableColumns(df.columns.map(createTableColumn));
+    setTableDat(df.values as TableProps['data']);
   };
+
   // Select 组件选择内容改变的事件处理器
   const handleSelectedChange = (e: SelectChangeEvent<Array<number>>) => {
     // 选择的选项IDs(多选)
-    const selectedIds =
-      typeof e.target.value === 'string' ? [] : e.target.value;
-    // 保持 Table 列的位置
-    const selectedColumns = options
-      .filter((option) => selectedIds.includes(option.id))
-      .map((option) => option.id);
+    const selectedIds = (
+      typeof e.target.value === 'string' ? selectedOptionIds : e.target.value
+    ).sort();
 
     setSelectedOptionIds(selectedIds);
+
     pipe(
-      innerDf,
+      // subDF,
+      df,
       optionFold(
         // onNone
-        () => {},
+        constVoid,
         // onSome
         (df) => {
-          const df_ = df.iloc({ columns: selectedColumns });
-          changeColumnsAndData(df_);
+          changeColumnsAndData(df.iloc({ columns: selectedIds }));
         }
       )
     );
   };
 
-  useEffect(
-    () =>
-      pipe(
-        df,
-        optionFold(
-          // Options: onNone
-          () => {},
-          // Options: onSome
-          (getDf) => {
-            getDf().then((e) =>
-              pipe(
-                e,
-                eitherFold(
-                  // Either: onLeft
-                  // TODO: refactor to SnackBar
-                  console.error,
-                  // Either: onRight
-                  (d) => {
-                    setInnerDf(some(d));
-                    changeColumnsAndData(d);
-                    setOptions(d.columns.map(columnToOption));
-                    setSelectedOptionIds(d.columns.map((_, idx) => idx));
-                  }
-                )
-              )
-            );
-          }
-        )
-      ),
-    [df]
-  );
-
   return (
     <Box>
       <Select
         labelId={`ShowDf-Select-Label-${idSuffix}`}
-        options={options}
+        options={selectOptions}
         selectedOptionIds={selectedOptionIds}
         handleChange={handleSelectedChange}
       />
-      <Table columns={columns} data={data} />
+      <Table columns={tableColumns} data={tableData} />
     </Box>
   );
 };
