@@ -17,10 +17,8 @@ import {
   identity,
   ifElse,
   lensProp,
-  pick,
   prop,
   set,
-  values,
 } from 'ramda';
 
 /**
@@ -41,11 +39,7 @@ export const parseDate = setDateString('yyyy-MM-dd');
  *
  * intervalToArray :: Interval a => a -> [Date | number]
  */
-export const intervalToArray = compose<
-  Interval,
-  Interval,
-  Array<Date | number>
->(values, pick(['start', 'end']));
+export const intervalToArray = (i: Interval) => [i.start, i.end];
 /**
  * 帮助函数
  *
@@ -55,6 +49,18 @@ export const diffInMonthsForInterval = compose(
   apply(differenceInMonths),
   intervalToArray
 );
+/**
+ * 根据给定的日期字符串与当期时间一起来构造 Interval 对象
+ *
+ * @param dateString yyyy-MM-dd
+ * @returns Interval
+ *
+ * intervalBaseNow :: Interval a => string -> a
+ */
+export const intervalBaseNow = (dateString: string): Interval => ({
+  start: parseDate(dateString),
+  end: Date.now(),
+});
 /**
  * 是否是合法时间段, 即开始日期要小于截止日期
  *
