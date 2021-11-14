@@ -87,7 +87,7 @@ export const getFullMonthEndDate: (a: Interval) => Date = converge(addMonths, [
  * 转换给定的 Interval 为新的 Interval, 将原始 Interval 的 start date 设置为
  * 满月截止日期
  *
- * getNewInterval :: Interval a => a -> a
+ * setFullMonthInterval :: Interval a => a -> a
  */
 export const setFullMonthInterval: (a: Interval) => any = converge(
   set(lensProp('start')),
