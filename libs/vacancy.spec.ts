@@ -7,7 +7,9 @@ import {
   isLegalInterval,
   parseDate,
   setFullMonthInterval,
+  addColumn,
 } from './vacancy';
+import { DataFrame } from 'danfojs';
 
 it('应该可以将给定的 yyyy-mm-dd 格式字符串转换给日期, 且该日期的时间是 00:00:00.00', () => {
   // 注意这里的实际创建的本地日期是 '2021-02-17T00:00:00.00+08:00'
@@ -188,4 +190,15 @@ describe('[]: 获取精确月差', () => {
 
     expect(+calcExactDiffMonths(interval).toFixed(2)).toEqual(7.27);
   });
+});
+
+it('应该可以计算出月差 ', () => {
+  const df = new DataFrame({
+    dateA: ['2021-1-1', '2021-10-1', '2021-9-21'],
+  });
+  const expectV = [10.43, 1.43, 1.77];
+
+  const newDf = addColumn('v')('dateA')(df);
+
+  expect(newDf()['v'].values).toEqual(expectV);
 });

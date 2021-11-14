@@ -1,3 +1,4 @@
+import { DataFrame, Series } from 'danfojs';
 import { Interval } from 'date-fns';
 import {
   addMonths,
@@ -7,16 +8,21 @@ import {
   getDaysInMonth,
   parse,
 } from 'date-fns/fp';
+import { flow, pipe } from 'fp-ts/function';
+import { ap as ioAp, map as ioMap, of as ioOf } from 'fp-ts/IO';
 import {
   always,
   anyPass,
   apply,
   compose,
   converge,
+  divide,
   equals,
+  flip,
   identity,
   ifElse,
   lensProp,
+  multiply,
   prop,
   set,
 } from 'ramda';
@@ -129,3 +135,46 @@ export const getExactDiffMonths = ifElse(
   calcExactDiffMonths,
   always(0)
 );
+/**
+ * 根据给定的日期字符串结合当前日期计算月差
+ *
+ * diffMonthsByNow :: string -> number
+ */
+export const diffMonthsByNow = flow(intervalBaseNow, getExactDiffMonths);
+/**
+ * 根据给定的包含其实日期字符串的 series 计算到现在为止的月差
+ *
+ * @param series 起始日期字符串 series
+ * @returns 月差 series
+ *
+ * seriesApply :: Series a => a -> a
+ */
+export const seriesApply = (series: Series) =>
+  <Series>(
+    series.apply(
+      flow(diffMonthsByNow, multiply(100), Math.round, flip(divide)(100))
+    )
+  );
+/**
+ *
+ * 创建包含月差字段的 DataFrame
+ *
+ * @param newColumnName 创建的新字段名称
+ * @param startDate 开始日期字段名称
+ * @param df DataFame
+ * @returns DataFrame
+ *
+ * addColumn :: string -> string -> DataFrame -> IO<DataFrame>
+ */
+export const addColumn =
+  (newColumnName: string) => (startDate: string) => (df: DataFrame) =>
+    pipe(
+      ioOf(seriesApply),
+      ioAp(ioOf(df[startDate])),
+      ioMap(
+        (v) => <DataFrame>df.addColumn({
+            column: newColumnName,
+            values: v,
+          })
+      )
+    );
