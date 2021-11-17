@@ -23,7 +23,7 @@ const dateColumn = '起始日期';
 
 const byILoc = (df: DataFrame) => df.iloc({ columns: needColumns });
 
-const getSubDf = flow(byILoc);
+const getSubDf = flow(byILoc, addVacancyMonths('vacancy_months')(dateColumn));
 
 const Home: NextPage = () => {
   const [df, setDf] = useState<Option<DataFrame>>(none);
@@ -40,13 +40,11 @@ const Home: NextPage = () => {
       Option<DataFrame>,
       Option<DataFrame>,
       Option<DataFrame>,
-      Option<DataFrame>,
       void
     >(
       some,
       chainFirst<Option<DataFrame>, void>(setDf),
       optionMap(getSubDf),
-      optionMap(addVacancyMonths('vacancy_months')(dateColumn)),
       setSubDf
     );
     const onNoneSetDfToNone = compose(setDf, always(none));
