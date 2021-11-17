@@ -168,7 +168,7 @@ describe('[calcExactDiffMonths]: 计算精确月差', () => {
   });
 });
 
-describe('[]: 获取精确月差', () => {
+describe('[getExactDiffMonths]: 获取精确月差', () => {
   it('不合法的 Intervale 应该返回 0', () => {
     const start = parseDate('2020-11-15');
     const end = parseDate('2020-6-23');
@@ -193,12 +193,14 @@ describe('[]: 获取精确月差', () => {
 });
 
 it('应该可以计算出月差 ', () => {
+  jest.spyOn(Date, 'now').mockReturnValue(new Date('2021-11-15').valueOf());
+
   const df = new DataFrame({
     dateA: ['2021-1-1', '2021-10-1', '2021-9-21'],
   });
-  const expectV = [10.43, 1.43, 1.77];
+  const expectV = [10.47, 1.47, 1.81];
 
   const newDf = addColumn('v')('dateA')(df);
 
-  expect(newDf()['v'].values).toEqual(expectV);
+  expect(newDf['v'].values).toEqual(expectV);
 });

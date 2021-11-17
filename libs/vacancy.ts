@@ -9,7 +9,7 @@ import {
   parse,
 } from 'date-fns/fp';
 import { flow, pipe } from 'fp-ts/function';
-import { ap as ioAp, map as ioMap, of as ioOf } from 'fp-ts/IO';
+import { ap as idAp, map as idMap, of as idOf } from 'fp-ts/Identity';
 import {
   always,
   anyPass,
@@ -169,9 +169,9 @@ export const seriesApply = (series: Series) =>
 export const addColumn =
   (newColumnName: string) => (startDate: string) => (df: DataFrame) =>
     pipe(
-      ioOf(seriesApply),
-      ioAp(ioOf(df[startDate])),
-      ioMap(
+      idOf(seriesApply),
+      idAp(idOf(df[startDate])),
+      idMap(
         (v) => <DataFrame>df.addColumn({
             column: newColumnName,
             values: v,
