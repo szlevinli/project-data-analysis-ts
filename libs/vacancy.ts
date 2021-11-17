@@ -166,7 +166,7 @@ export const seriesApply = (series: Series) =>
  *
  * addColumn :: string -> string -> DataFrame -> IO<DataFrame>
  */
-export const addColumn =
+export const addVacancyMonths =
   (newColumnName: string) => (startDate: string) => (df: DataFrame) =>
     pipe(
       idOf(seriesApply),

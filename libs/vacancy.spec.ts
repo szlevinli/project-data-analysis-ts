@@ -7,7 +7,7 @@ import {
   isLegalInterval,
   parseDate,
   setFullMonthInterval,
-  addColumn,
+  addVacancyMonths,
 } from './vacancy';
 import { DataFrame } from 'danfojs';
 
@@ -200,7 +200,7 @@ it('应该可以计算出月差 ', () => {
   });
   const expectV = [10.47, 1.47, 1.81];
 
-  const newDf = addColumn('v')('dateA')(df);
+  const newDf = addVacancyMonths('v')('dateA')(df);
 
   expect(newDf['v'].values).toEqual(expectV);
 });
